@@ -40,10 +40,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(partialMasking(unmarshalVar)))
+	resp := partialMasking(unmarshalVar)
+	bytest, _ = json.Marshal(resp)
+	fmt.Println(string(bytest))
 }
 
-func partialMasking(unmarshalVar map[string]interface{}) []byte {
+func partialMasking(unmarshalVar map[string]interface{}) map[string]interface{} {
 	responseJson := map[string]interface{}{}
 	nestedJson := []map[string]interface{}{}
 	maskedString := ""
@@ -56,27 +58,12 @@ func partialMasking(unmarshalVar map[string]interface{}) []byte {
 
 		case []interface{}:
 			for _, va := range v.([]interface{}) {
-				resp := partialMaskingArray(va.(map[string]interface{}))
+				resp := partialMasking(va.(map[string]interface{}))
 				nestedJson = append(nestedJson, resp)
 				responseJson[k] = nestedJson
 			}
 			nestedJson = nil
 		}
-		bytest, _ = json.Marshal(responseJson)
-	}
-	return bytest
-}
-
-func partialMaskingArray(unmarshalVar map[string]interface{}) map[string]interface{} {
-	responseJson := map[string]interface{}{}
-	maskedString := ""
-	for k, v := range unmarshalVar {
-		switch v.(type) {
-		case string:
-			arrayStr := strings.Split(v.(string), "")
-			maskedString = strMask(arrayStr)
-		}
-		responseJson[k] = maskedString
 	}
 	return responseJson
 }
