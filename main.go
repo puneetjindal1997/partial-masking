@@ -50,11 +50,9 @@ func partialMasking(unmarshalVar map[string]interface{}) []byte {
 	for k, v := range unmarshalVar {
 		switch v.(type) {
 		case string:
-			// fmt.Println(v, k)
 			arrayStr := strings.Split(v.(string), "")
 			maskedString = strMask(arrayStr)
 			responseJson[k] = maskedString
-			// fmt.Println(maskedString)
 
 		case []interface{}:
 			for _, va := range v.([]interface{}) {
@@ -65,7 +63,6 @@ func partialMasking(unmarshalVar map[string]interface{}) []byte {
 			nestedJson = nil
 		}
 		bytest, _ = json.Marshal(responseJson)
-		// fmt.Println(string(bytest))
 	}
 	return bytest
 }
