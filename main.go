@@ -51,11 +51,12 @@ func partialMasking(unmarshalVar map[string]interface{}) map[string]interface{} 
 	maskedString := ""
 	for k, v := range unmarshalVar {
 		switch v.(type) {
+		// handling string data
 		case string:
 			arrayStr := strings.Split(v.(string), "")
 			maskedString = strMask(arrayStr)
 			responseJson[k] = maskedString
-
+		// handling if there is any multiple data
 		case []interface{}:
 			for _, va := range v.([]interface{}) {
 				resp := partialMasking(va.(map[string]interface{}))
